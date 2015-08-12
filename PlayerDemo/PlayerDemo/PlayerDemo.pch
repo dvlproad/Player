@@ -1,0 +1,13 @@
+//
+//  PlayerDemo.pch
+//  PlayerDemo
+//
+//  Created by lichq on 8/7/15.
+//  Copyright (c) 2015 ciyouzen. All rights reserved.
+//
+
+
+
+#define Private_WebPath     [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Private Documents/Temp"]
+#define Private_CachePath   [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Private Documents/Cache"]
+
