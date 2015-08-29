@@ -4,6 +4,7 @@ platform :ios, '7.0'
 target 'PlayerDemo' do
   pod 'ASIHTTPRequest', '~> 1.8.2'
   pod 'CocoaHTTPServer', '~> 2.3'
+#  pod 'kxmovie', '0.0.3'
 end
 
 target 'PlayerDemoTests' do

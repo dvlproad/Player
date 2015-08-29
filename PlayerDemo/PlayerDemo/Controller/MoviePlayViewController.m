@@ -63,8 +63,29 @@
 }
 
 
+//方法0：使用浏览器或者第三方插件的时候
+- (IBAction)play_Browser:(id)sender{
+    NSString *path = self.tView.text;
+    //NSString *path = [NSString stringWithFormat:@"vlc:%@", self.tView.text];//一定要冒号
+    if ([path hasPrefix:@"http://"] || [path hasPrefix:@"rtsp://"] || [path hasPrefix:@"rtmp://"]) {
+        self.movieURL = [NSURL URLWithString:path];
+    }else{
+        self.movieURL = [NSURL fileURLWithPath:path];//本地视频地址：注意这里不要用[NSURL urlwithstring]
+    }
+    
+    //http可以用浏览器直接播放，也可以直接用系统播放器播放，但rtsp既不可以用浏览器，也不能用系统播放器
+    if ([[UIApplication sharedApplication] canOpenURL:self.movieURL]){
+        [[UIApplication sharedApplication] openURL:self.movieURL];
+    }else{
+        [[[UIAlertView alloc] initWithTitle:@"URL error"
+                                    message:@"无法打开，请检查"
+                                   delegate:self
+                          cancelButtonTitle:@"好的，我知道了"
+                          otherButtonTitles:nil] show];
+    }
+    
 
-
+}
 
 //方法①：使用ViewController的时候，直接present
 //控制器样式使用MPMovieControlStyleFullscreen       只显示音量控制

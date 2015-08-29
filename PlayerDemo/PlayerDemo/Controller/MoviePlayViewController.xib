@@ -26,16 +26,6 @@
                         <action selector="selectMovie_Remote_HTTP:" destination="-1" eventType="touchUpInside" id="rfU-Oh-Lh9"/>
                     </connections>
                 </button>
-                <button opaque="NO" tag="1001" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B0M-hG-oWS">
-                    <rect key="frame" x="10" y="150" width="90" height="30"/>
-                    <color key="backgroundColor" red="0.78017430929999998" green="0.86903425099999998" blue="0.62558724349999995" alpha="1" colorSpace="calibratedRGB"/>
-                    <state key="normal" title="②选RTSP">
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <connections>
-                        <action selector="selectMovie_Remote_RTSP:" destination="-1" eventType="touchUpInside" id="thy-7l-xFa"/>
-                    </connections>
-                </button>
                 <button opaque="NO" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0JK-sX-BRv">
                     <rect key="frame" x="10" y="86" width="127" height="30"/>
                     <color key="backgroundColor" red="0.40000000600000002" green="0.80000001190000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -56,7 +46,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" tag="1002" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w33-NW-Kk3">
-                    <rect key="frame" x="10" y="150" width="90" height="30"/>
+                    <rect key="frame" x="222" y="150" width="90" height="30"/>
                     <color key="backgroundColor" red="0.78017430929999998" green="0.86903425099999998" blue="0.62558724349999995" alpha="1" colorSpace="calibratedRGB"/>
                     <state key="normal" title="③选RTMP">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -101,6 +91,16 @@
                     </state>
                     <connections>
                         <action selector="play_MPMoviePlayerController:" destination="-1" eventType="touchUpInside" id="tam-xU-TFo"/>
+                    </connections>
+                </button>
+                <button opaque="NO" tag="1001" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B0M-hG-oWS">
+                    <rect key="frame" x="115" y="150" width="90" height="30"/>
+                    <color key="backgroundColor" red="0.78017430929999998" green="0.86903425099999998" blue="0.62558724349999995" alpha="1" colorSpace="calibratedRGB"/>
+                    <state key="normal" title="②选RTSP">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="selectMovie_Remote_RTSP:" destination="-1" eventType="touchUpInside" id="thy-7l-xFa"/>
                     </connections>
                 </button>
             </subviews>
