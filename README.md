@@ -3,6 +3,21 @@ player demo cantain mpmovieplayercontroller
 
 FFMPEG的使用已存放在Camera的帮助文档里
 
+本文内容包括
+`使用ffmpeg步骤
+`可以正常使用的ffmpeg的编译库来源
+`编译FFmpeg库的一些参数学习了解
+`问：怎么在打开流媒体的时候传一些附加参数？
+`kxmovie播放摄像头实时监控视频流(rtsp)的时候出现错误(实际上是ffmpeg问题)
+
+##模块: (FFMPEG SDK 开发介绍： http://my.oschina.net/codelive/blog/89373)
+libavcodec    - 编码解码器 
+libavdevice   - 输入输出设备的支持 
+libavfilter   - 视音频滤镜支持 
+libavformat   - 视音频等格式的解析 
+libavutil     - 工具库 
+libpostproc   - 后期效果处理 
+libswscale    - 图像颜色、尺寸转换 
 
 ##使用ffmpeg步骤：http://www.cnblogs.com/bandy/archive/2013/02/19/2916641.html
 ```
@@ -23,7 +38,7 @@ avpicture_fill(pFrameRGB);//给pFrameRGB帧加上分配的内存;
 while(true)
 {
     av_read_frame();//读取一个帧（到最后帧则break）
-    avcodec_decode_video2();//解码该帧
+    avcodec_decode_video2();//解码该帧。作用是解码一帧视频数据。输入一个压缩编码的结构体AVPacket，输出一个解码后的结构体AVFrame
     sws_getCachedContext()sws_scale（）;//把该帧转换（渲染）成RGB
     SaveFrame();//对前5帧保存成ppm图形文件(这个是自定义函数，非API)
     av_free_packet();//释放本次读取的帧内存
@@ -93,7 +108,7 @@ instruction selection, may crash on older CPUs)         //cpu根据具体类型�
 
 
 
-问：怎么在打开流媒体的时候传一些附加参数？
+##问：怎么在打开流媒体的时候传一些附加参数？
 即：首先我们知道使用ffmpeg类库打开流媒体（或本地文件）的函数是avformat_open_input()。一般情况下，打开媒体只要传入流媒体的url就可以了。但是在打开某些流媒体的时候，我们可能还需要附加一些参数。这时候我们怎么在打开流媒体的时候传一些附加参数？
 答：FFMPEG类库打开流媒体的方法（需要传参数的时候） http://blog.csdn.net/leixiaohua1020/article/details/14215393
 即：我们不难发现avformat_open_input()的第4个参数是一个AVDictionary类型的参数，而这个参数就是传入的附加参数。具体的使用如下：
@@ -117,3 +132,30 @@ av_dict_free(&avdic);//别忘了最后还要av_dict_free(&avdic);
 ```
 
 
+##问：kxmovie播放摄像头实时监控视频流(rtsp)的时候出现错误(实际上是ffmpeg问题)
+详：kxmovie播放本地视频和网络视频都正常,但播放摄像头实时监控视频流(rtsp)的时候出现错误(实际上是ffmpeg问题)，错误如下：
+lookhouse[67599:957674] UDP timeout, retrying with TCP
+lookhouse[67599:957674] Could not find codec parameters for stream 1 (Video: h264, none): unspecified size
+Consider increasing the value for the 'analyzeduration' and 'probesize' options
+答：跟踪代码，错误是在avformat_find_stream_info获取流信息失败的时候的时候触发。经过几天的摸索，最终确定是网络的问题（在模拟器播放一直出错，在3G网络下能播放iOS使用ffmpeg播放rstp实时监控视频数据流），具体原因估计是rstp视频流，程序默认采用udp传输或者组播，导致在私有网络视频流不能正常传输。
+解决办法①(确定可用)：把视频流的传输模式强制成tcp传输：LZ的环境中使用UDP链接不到视频源，可以直接指定使用TCP模式去链接视频源，这样就少了一个UDP的尝试过程，可以节省点时间，具体代码
+```
+AVFormatContext *formatCtx = NULL;
+formatCtx = avformat_alloc_context();
+
+AVDictionary* options = NULL;
+av_dict_set(&options, "rtsp_transport", "tcp", 0);//有三种传输方式：tcp udp_multicast udp，强制采用tcp传输
+//av_dict_set(&options, "max_analyze_duration", "1000", 0);
+
+if(avformat_open_input(&formatCtx, [path cStringUsingEncoding:NSASCIIStringEncoding],                              NULL, &options) != 0) {
+    av_log(NULL, AV_LOG_ERROR, "Couldn't open file\n");
+    goto initError;
+}
+```
+解决办法②(好像)网上其他类似问题：我在调用ffmpeg播放实时视频流时，连接后在获取可用帧之前,avformat_find_stream_info函数处理垃圾信息用时太长(一般都要12秒左右）。请问可不可以让这时间短一点。还有总是有 [rtsp @ 0xdb2a000] UDP timeout, retrying with TCP信息提示。
+自己手动设置AVFormatContext结构体的一些参数，能让它分析的快一点。更改max_analyze_duration=1000及probesize=2048。
+```
+av_dict_set(&options, "max_analyze_duration", "1000", 0);
+//av_dict_set(&options, "probesize", "2048", 0);//在kxmovie中设置此行会无画面
+```
+问题解决。
